@@ -20,6 +20,7 @@ public class GrammarController {
         model.addAttribute("grammar", grammarService.getGrammarString());
         model.addAttribute("firstSets", grammarService.getFirstSets());
         model.addAttribute("followSets", grammarService.getFollowSets());
+        model.addAttribute("showParserLink", true);
         return "index";
     }
 } 

@@ -88,6 +88,28 @@
             color: #666;
             font-size: 0.9rem;
         }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .nav-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: var(--accent-color);
+            color: black;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+        
+        .nav-button:hover {
+            background-color: #a16be2;
+        }
     </style>
 </head>
 <body>
@@ -95,6 +117,10 @@
         <header>
             <h1>Grammar Analysis</h1>
             <p>First and Follow Sets Calculator</p>
+            
+            <div class="nav-buttons" th:if="${showParserLink}">
+                <a href="/parser" class="nav-button">Try Recursive Descent Parser</a>
+            </div>
         </header>
         
         <div class="card">

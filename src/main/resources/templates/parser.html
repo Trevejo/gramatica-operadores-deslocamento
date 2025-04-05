@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recursive Descent Parser</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --accent-color: #bb86fc;
+            --secondary-color: #03dac6;
+            --border-color: #333333;
+            --error-color: #cf6679;
+            --success-color: #4caf50;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: var(--accent-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        pre {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+        }
+        
+        .grammar-info {
+            margin-bottom: 20px;
+        }
+        
+        .grammar-row {
+            margin-bottom: 10px;
+            font-family: 'Fira Code', monospace;
+        }
+        
+        .success {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+        
+        .error {
+            color: var(--error-color);
+            font-weight: bold;
+        }
+        
+        .parser-form {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-color);
+            font-family: 'Fira Code', monospace;
+        }
+        
+        button {
+            background-color: var(--accent-color);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            align-self: flex-start;
+        }
+        
+        button:hover {
+            background-color: #a16be2;
+        }
+        
+        .results-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .syntax-tree {
+            line-height: 1.3;
+        }
+        
+        @media (max-width: 768px) {
+            .parser-form {
+                flex-direction: column;
+            }
+            
+            input[type="text"] {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Recursive Descent Parser</h1>
+            <p>Grammar Analyzer for Expression Parsing</p>
+        </header>
+        
+        <div class="card">
+            <h2>Grammar Definition</h2>
+            <div class="grammar-info">
+                <p>This parser implements the following grammar:</p>
+                <div class="grammar-row">E → E &lt;&lt; T | E &gt;&gt; T | T</div>
+                <div class="grammar-row">T → T + F | T - F | F</div>
+                <div class="grammar-row">F → ( E ) | id</div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Parse Expression</h2>
+            <form class="parser-form" method="post" action="/parser">
+                <div class="input-group">
+                    <label for="input">Enter an expression to parse:</label>
+                    <input type="text" id="input" name="input" th:value="${input}" placeholder="Example: id + id << id">
+                </div>
+                <button type="submit">Parse</button>
+            </form>
+            
+            <div th:if="${showResults}" class="results-container">
+                <div class="card">
+                    <h2>
+                        Parse Result: 
+                        <span th:if="${success}" class="success">Success</span>
+                        <span th:unless="${success}" class="error">Error</span>
+                    </h2>
+                    
+                    <div th:if="${success}">
+                        <h3>Syntax Tree</h3>
+                        <pre class="syntax-tree" th:text="${syntaxTree}"></pre>
+                    </div>
+                    
+                    <div th:if="${!success && errors != null && !errors.empty}">
+                        <h3>Errors</h3>
+                        <pre class="error" th:text="${errors}"></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Compiladores - GCOD Grammar Analyzer</p>
+        </footer>
+    </div>
+</body>
+</html> 
