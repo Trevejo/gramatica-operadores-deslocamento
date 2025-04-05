@@ -5,14 +5,14 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.4</version>
+		<version>3.3.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>compiladores</groupId>
-	<artifactId>GCOD</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>GCOD</name>
-	<description>implementação de gramática com operadores de deslocamento</description>
+	<groupId>com.grammar</groupId>
+	<artifactId>grammar-calculator</artifactId>
+	<version>1.0.0</version>
+	<name>grammar-calculator</name>
+	<description>FIRST and FOLLOW set calculator with Spring Boot UI</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -28,6 +28,7 @@
 	</scm>
 	<properties>
 		<java.version>17</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>
 		<dependency>
