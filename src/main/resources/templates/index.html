@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grammar First and Follow Sets</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --card-bg: #1e1e1e;
+            --accent-color: #bb86fc;
+            --secondary-color: #03dac6;
+            --border-color: #333333;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: var(--accent-color);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        h2 {
+            color: var(--secondary-color);
+            font-size: 1.8rem;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        pre {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+        }
+        
+        .grammar-row {
+            margin-bottom: 10px;
+            font-family: 'Fira Code', monospace;
+        }
+        
+        .first-follow-sets {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .first-follow-sets {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        footer {
+            margin-top: 50px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Grammar Analysis</h1>
+            <p>First and Follow Sets Calculator</p>
+        </header>
+        
+        <div class="card">
+            <h2>Grammar Definition</h2>
+            <div th:each="rule : ${grammar}" class="grammar-row">
+                <span th:text="${rule}"></span>
+            </div>
+        </div>
+        
+        <div class="first-follow-sets">
+            <div class="card">
+                <h2>First Sets</h2>
+                <pre th:text="${firstSets}"></pre>
+            </div>
+            
+            <div class="card">
+                <h2>Follow Sets</h2>
+                <pre th:text="${followSets}"></pre>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Compiladores - GCOD Grammar Analyzer</p>
+        </footer>
+    </div>
+</body>
+</html> 
