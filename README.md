@@ -44,7 +44,7 @@ git clone https://github.com/Trevejo/gramatica-operadores-deslocamento.git
 
 2. Navegue até o diretório do projeto:
 ```bash
-cd GCOD
+cd gramatica-operadores-deslocamento
 ```
 
 3. Construa o projeto usando Maven:
