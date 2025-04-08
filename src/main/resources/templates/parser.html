@@ -33,6 +33,27 @@
         header {
             margin-bottom: 40px;
             text-align: center;
+            position: relative;
+        }
+        
+        .back-button {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--secondary-color);
+            color: #000;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .back-button:hover {
+            background-color: #02b8a6;
         }
         
         h1 {
@@ -160,20 +181,12 @@
 <body>
     <div class="container">
         <header>
+            <a href="/" class="back-button">← Back</a>
             <h1>Recursive Descent Parser</h1>
             <p>Grammar Analyzer for Expression Parsing</p>
         </header>
         
-        <div class="card">
-            <h2>Grammar Definition</h2>
-            <div class="grammar-info">
-                <p>This parser implements the following grammar:</p>
-                <div class="grammar-row">E → E &lt;&lt; T | E &gt;&gt; T | T</div>
-                <div class="grammar-row">T → T + F | T - F | F</div>
-                <div class="grammar-row">F → ( E ) | id</div>
-            </div>
-        </div>
-        
+
         <div class="card">
             <h2>Parse Expression</h2>
             <form class="parser-form" method="post" action="/parser">
@@ -202,6 +215,16 @@
                         <pre class="error" th:text="${errors}"></pre>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Grammar Definition</h2>
+            <div class="grammar-info">
+                <p>This parser implements the following grammar:</p>
+                <div class="grammar-row">E → E &lt;&lt; T | E &gt;&gt; T | T</div>
+                <div class="grammar-row">T → T + F | T - F | F</div>
+                <div class="grammar-row">F → ( E ) | id</div>
             </div>
         </div>
         

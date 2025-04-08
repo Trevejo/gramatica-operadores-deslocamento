@@ -125,8 +125,10 @@
         
         <div class="card">
             <h2>Grammar Definition</h2>
-            <div th:each="rule : ${grammar}" class="grammar-row">
-                <span th:text="${rule}"></span>
+            <div class="grammar-info">
+                <div class="grammar-row">E → E &lt;&lt; T | E &gt;&gt; T | T</div>
+                <div class="grammar-row">T → T + F | T - F | F</div>
+                <div class="grammar-row">F → ( E ) | id</div>
             </div>
         </div>
         
