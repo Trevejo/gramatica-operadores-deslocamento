@@ -200,19 +200,28 @@
             <div th:if="${showResults}" class="results-container">
                 <div class="card">
                     <h2>
-                        Parse Result: 
+                        Analysis Result: 
                         <span th:if="${success}" class="success">Success</span>
-                        <span th:unless="${success}" class="error">Error</span>
+                        <span th:unless="${success}" class="error">Found Errors</span>
                     </h2>
                     
-                    <div th:if="${success}">
-                        <h3>Syntax Tree</h3>
-                        <pre class="syntax-tree" th:text="${syntaxTree}"></pre>
+                    <div th:if="${errors != null && !errors.empty}">
+                        <h3>Problems:</h3>
+                        <pre class="error" th:text="${errors}"></pre>
                     </div>
                     
-                    <div th:if="${!success && errors != null && !errors.empty}">
-                        <h3>Errors</h3>
-                        <pre class="error" th:text="${errors}"></pre>
+                    <div th:if="${syntaxTree != null}">
+                        <h3>Syntax Tree (Post-Semantic Analysis)</h3>
+                        <pre class="syntax-tree" th:text="${syntaxTree}"></pre>
+                    </div>
+
+                    <div th:if="${symbolTable != null}">
+                        <h3>Symbol Table</h3>
+                        <pre th:text="${symbolTable}"></pre>
+                    </div>
+                    
+                    <div th:if="${success && (errors == null || errors.empty)}">
+                         <p class="success">Input parsed and analyzed successfully with no errors.</p>
                     </div>
                 </div>
             </div>

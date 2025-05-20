@@ -11,7 +11,7 @@ public class SymbolTable {
 
     public SymbolTable() {
         this.table = new HashMap<>();
-        this.currentScope = "global"; // Default scope
+        this.currentScope = "global";
     }
 
     public void enterScope(String scopeName) {
@@ -19,8 +19,8 @@ public class SymbolTable {
     }
 
     public void exitScope() {
-        // For now, let's assume exiting a scope means returning to global.
-        // More sophisticated scope management (e.g., nested scopes) can be added.
+        // For now, assumes exiting a scope means returning to global.
+        // More sophisticated scope management (e.g., nested scopes) could be added.
         this.currentScope = "global"; 
     }
 
@@ -40,7 +40,6 @@ public class SymbolTable {
                     return sym;
                 }
             }
-            // If not found in current scope, check global scope (if not already global)
             if (!scope.equals("global")) {
                  for (Symbol sym : symbols) {
                     if (sym.getScope().equals("global")) {
@@ -52,7 +51,6 @@ public class SymbolTable {
         return null;
     }
 
-    // Lookup in current scope, then global
     public Symbol lookup(String name) {
         return lookup(name, this.currentScope);
     }

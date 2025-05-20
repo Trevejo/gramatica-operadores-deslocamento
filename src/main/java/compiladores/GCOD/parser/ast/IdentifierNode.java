@@ -1,14 +1,14 @@
 package compiladores.GCOD.parser.ast;
 
 import compiladores.GCOD.parser.Token;
-import compiladores.GCOD.semantico.Symbol; // Assuming Symbol class is in this package
+import compiladores.GCOD.semantico.Symbol;
 
 public class IdentifierNode extends ExpressionNode {
     private final String name;
-    private Token token; // Added to store token for line/col info
-    private Symbol symbol; // Added to link to symbol table entry
+    private Token token;
+    private Symbol symbol;
 
-    public IdentifierNode(String name, Token token) { // Modified constructor
+    public IdentifierNode(String name, Token token) {
         this.name = name;
         this.token = token;
     }

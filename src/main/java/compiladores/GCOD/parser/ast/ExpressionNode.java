@@ -1,7 +1,7 @@
 package compiladores.GCOD.parser.ast;
 
 public abstract class ExpressionNode implements ASTNode {
-    protected String resolvedType; // Added for semantic analysis
+    protected String resolvedType;
 
     @Override
     public String toTreeString() {

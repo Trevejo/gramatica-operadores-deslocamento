@@ -9,7 +9,8 @@ import java.util.List;
 
 public class SemanticAnalyzer {
     public static final String TYPE_INT = "int";
-    public static final String TYPE_BOOL = "bool"; // For results of comparisons, conditions
+    public static final String TYPE_FLOAT = "float";
+    public static final String TYPE_BOOL = "bool";
     public static final String TYPE_UNKNOWN = "unknown";
     public static final String TYPE_ERROR = "error_type";
 
@@ -23,6 +24,10 @@ public class SemanticAnalyzer {
 
     public List<String> getSemanticErrors() {
         return semanticErrors;
+    }
+
+    public SymbolTable getSymbolTable() {
+        return symbolTable;
     }
 
     public void analyze(ASTNode node) {
@@ -39,8 +44,6 @@ public class SemanticAnalyzer {
         } else if (node instanceof ParenthesizedExpressionNode) {
             visitParenthesizedExpression((ParenthesizedExpressionNode) node);
         }
-        // Add more else if blocks for other ASTNode types as the grammar expands
-        // e.g., DeclarationNode, AssignmentNode, IfStatementNode, etc.
     }
 
     private void addError(String message, int line, int column) {
@@ -50,26 +53,17 @@ public class SemanticAnalyzer {
     private void visitIdentifier(IdentifierNode node) {
         String varName = node.getName();
         Token token = node.getToken();
-
-        Symbol symbol = symbolTable.lookup(varName); // Looks in current then global
+        Symbol symbol = symbolTable.lookup(varName);
 
         if (symbol == null) {
             // For this simple grammar, assume first encounter is a declaration of TYPE_INT.
-            // In a real language, this would be an undeclared variable error if not on LHS of assignment or in a decl.
-            // For now, we are auto-declaring it to allow expressions like "a + b" to be analyzable.
-            // This fulfills "construção da tabela de símbolos" by adding it.
-            // It also touches on "validação de declarações" by implicitly declaring.
             symbol = new Symbol(varName, TYPE_INT, symbolTable.getCurrentScope(), token.getLine(), token.getColumn());
             symbolTable.addSymbol(symbol);
-            // For this example, we don't add an error for "undeclared", because we auto-declare.
-            // If the language had explicit declarations, here we'd error: addError("Variable '" + varName + "' not declared.", token.getLine(), token.getColumn());
             
-            // Annotate AST node
-            node.setResolvedType(TYPE_INT); // Defaulting to int for this simple expression grammar
+            node.setResolvedType(TYPE_INT);
             node.setSymbol(symbol);
             System.out.println("Implicitly declared identifier '" + varName + "' as " + TYPE_INT + " in scope '" + symbol.getScope() + "' at line " + token.getLine());
         } else {
-            // Variable already in symbol table (either from previous implicit or explicit declaration)
             node.setResolvedType(symbol.getType());
             node.setSymbol(symbol);
             System.out.println("Identifier '" + varName + "' found in symbol table. Type: " + symbol.getType() + ", Scope: " + symbol.getScope());
@@ -87,7 +81,6 @@ public class SemanticAnalyzer {
         int line = operatorToken.getLine();
         int col = operatorToken.getColumn();
 
-        // Default to error type if operands have errors
         if (TYPE_ERROR.equals(leftType) || TYPE_ERROR.equals(rightType)) {
             node.setResolvedType(TYPE_ERROR);
             return;
@@ -102,6 +95,17 @@ public class SemanticAnalyzer {
         switch (operator) {
             case "+":
             case "-":
+                if (TYPE_INT.equals(leftType) && TYPE_INT.equals(rightType)) {
+                    node.setResolvedType(TYPE_INT);
+                } else if (TYPE_FLOAT.equals(leftType) && TYPE_FLOAT.equals(rightType)) {
+                    node.setResolvedType(TYPE_FLOAT);
+                } else if ((TYPE_INT.equals(leftType) && TYPE_FLOAT.equals(rightType)) || (TYPE_FLOAT.equals(leftType) && TYPE_INT.equals(rightType))) {
+                    node.setResolvedType(TYPE_FLOAT);
+                } else {
+                    addError("Type mismatch for operator '" + operator + ". Expected int/int, float/float, or int/float, but got " + leftType + " and " + rightType + ".", line, col);
+                    node.setResolvedType(TYPE_ERROR);
+                }
+                break;
             case "<<":
             case ">>":
                 if (TYPE_INT.equals(leftType) && TYPE_INT.equals(rightType)) {
@@ -116,7 +120,9 @@ public class SemanticAnalyzer {
                 node.setResolvedType(TYPE_ERROR);
                 break;
         }
-        System.out.println("BinaryOp '" + operator + "' [L"+line+",C"+col+"] with types " + leftType + ", " + rightType + " -> result type: " + node.getResolvedType());
+        if (!TYPE_ERROR.equals(node.getResolvedType())) {
+            System.out.println("BinaryOp '" + operator + "' [L"+line+",C"+col+"] with types (" + leftType + ", " + rightType + ") -> result type: " + node.getResolvedType());
+        }
     }
 
     private void visitParenthesizedExpression(ParenthesizedExpressionNode node) {
@@ -125,7 +131,6 @@ public class SemanticAnalyzer {
         System.out.println("ParenthesizedExpression -> result type: " + node.getResolvedType());
     }
 
-    // Placeholder for integrating with a ParserService or similar
     public void analyzeCode(String code) {
         Parser parser = new Parser(code);
         ASTNode astRoot = parser.parse();
@@ -133,8 +138,6 @@ public class SemanticAnalyzer {
 
         if (parseErrorsStr != null && !parseErrorsStr.isEmpty()) {
             semanticErrors.add("Parser Errors:\n" + parseErrorsStr);
-            // Optionally, don't proceed with semantic analysis if parsing failed badly
-            // return;
         }
 
         if (astRoot != null) {

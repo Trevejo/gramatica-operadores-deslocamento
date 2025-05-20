@@ -31,6 +31,7 @@ public class ParserController {
         model.addAttribute("input", input);
         model.addAttribute("syntaxTree", result.getSyntaxTree());
         model.addAttribute("errors", result.getErrors());
+        model.addAttribute("symbolTable", result.getSymbolTable());
         model.addAttribute("success", result.isSuccess());
         model.addAttribute("showResults", true);
         
