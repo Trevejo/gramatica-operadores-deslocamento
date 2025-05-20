@@ -1,13 +1,15 @@
 package compiladores.GCOD.parser.ast;
 
+import compiladores.GCOD.parser.Token;
+
 public class BinaryOperationNode extends ExpressionNode {
     private final ExpressionNode left;
-    private final String operator;
+    private final Token operatorToken;
     private final ExpressionNode right;
 
-    public BinaryOperationNode(ExpressionNode left, String operator, ExpressionNode right) {
+    public BinaryOperationNode(ExpressionNode left, Token operatorToken, ExpressionNode right) {
         this.left = left;
-        this.operator = operator;
+        this.operatorToken = operatorToken;
         this.right = right;
     }
 
@@ -15,8 +17,12 @@ public class BinaryOperationNode extends ExpressionNode {
         return left;
     }
 
+    public Token getOperatorToken() {
+        return operatorToken;
+    }
+
     public String getOperator() {
-        return operator;
+        return operatorToken.getValue();
     }
 
     public ExpressionNode getRight() {
@@ -26,12 +32,10 @@ public class BinaryOperationNode extends ExpressionNode {
     @Override
     public String toTreeString(String indent) {
         StringBuilder sb = new StringBuilder();
-        sb.append(indent).append("BinaryOp(").append(operator).append(")\n");
+        String typeInfo = resolvedType != null ? " [type: " + resolvedType + "]" : "";
+        sb.append(indent).append("BinaryOp(").append(getOperator()).append(")").append(typeInfo).append("\n");
         
-        // Left child with increased indentation
         sb.append(left.toTreeString(indent + "  ├─ "));
-        
-        // Right child with increased indentation
         sb.append(right.toTreeString(indent + "  └─ "));
         
         return sb.toString();

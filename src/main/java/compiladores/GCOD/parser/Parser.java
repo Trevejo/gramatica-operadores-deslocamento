@@ -73,12 +73,11 @@ public class Parser {
         switch (currentToken.getType()) {
             case LEFT_SHIFT:
             case RIGHT_SHIFT:
-                String operator = currentToken.getValue();
-                TokenType type = currentToken.getType();
-                consume(type);
+                Token opToken = currentToken;
+                consume(currentToken.getType());
                 ExpressionNode right = parseT();
                 if (right == null) return null;
-                ExpressionNode newLeft = new BinaryOperationNode(left, operator, right);
+                ExpressionNode newLeft = new BinaryOperationNode(left, opToken, right);
                 return parseEPrime(newLeft);
             default:
                 return left;
@@ -99,12 +98,11 @@ public class Parser {
         switch (currentToken.getType()) {
             case PLUS:
             case MINUS:
-                String operator = currentToken.getValue();
-                TokenType type = currentToken.getType();
-                consume(type);
+                Token opToken = currentToken;
+                consume(currentToken.getType());
                 ExpressionNode right = parseF();
                 if (right == null) return null;
-                ExpressionNode newLeft = new BinaryOperationNode(left, operator, right);
+                ExpressionNode newLeft = new BinaryOperationNode(left, opToken, right);
                 return parseTPrime(newLeft);
             default:
                 return left;
@@ -125,9 +123,10 @@ public class Parser {
                 return new ParenthesizedExpressionNode(expr);
             
             case ID:
+                Token idToken = currentToken;
                 String id = currentToken.getValue();
                 consume(TokenType.ID);
-                return new IdentifierNode(id);
+                return new IdentifierNode(id, idToken);
             
             case ERROR:
                 throw new SyntaxError("Invalid token: " + currentToken.getValue());
